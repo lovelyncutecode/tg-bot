@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"regexp"
 )
@@ -73,8 +74,8 @@ func webhookHandler(c *gin.Context) {
 			log.Println(err)
 			return
 		}
-
-		resp, err := bot.Client.Post(baseURL + "/" + botToken + "/sendMessage", "application/json", bytes.NewReader(bts))
+	log.Println(baseURL + "/" + botToken + "/sendMessage")
+		resp, err := http.DefaultClient.Post(baseURL + "/" + botToken + "/sendMessage", "application/json", bytes.NewReader(bts))
 		if resp.Status != "200" {
 			log.Println(resp.Status)
 			return
