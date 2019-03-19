@@ -75,7 +75,6 @@ func webhookHandler(c *gin.Context) {
 			return
 		}
 
-		tgbotapi.Message{}.Command()
 	log.Println("https://api.telegram.org/"+ botToken + "/sendMessage")
 
 		resp, err := http.DefaultClient.Post("https://api.telegram.org/"+ botToken + "/sendMessage", "application/json", bytes.NewReader(bts))
