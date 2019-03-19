@@ -74,7 +74,7 @@ func webhookHandler(c *gin.Context) {
 			return
 		}
 
-		resp, err := bot.Client.Post(baseURL + "/" + bot.Token + "/sendMessage", "application/json", bytes.NewReader(bts))
+		resp, err := bot.Client.Post(baseURL + "/" + botToken + "/sendMessage", "application/json", bytes.NewReader(bts))
 		if resp.Status != "200" {
 			log.Println(resp.Status)
 			return
@@ -95,7 +95,7 @@ func main() {
 
 	baseURL = os.Getenv("WEBHOOK_URL")
 	if baseURL == "" {
-		log.Fatal("$TELEGRAM_TOKEN must be set")
+		log.Fatal("$WEBHOOK_URL must be set")
 	}
 
 	// gin router
