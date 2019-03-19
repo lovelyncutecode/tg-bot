@@ -12,20 +12,23 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
-	"os"
 	"regexp"
 	"strings"
+	"time"
 )
 
 
 const (
 	MSGPATTERN = "работ"
 	QSOURCE    = "https://ru.wikiquote.org/wiki/%D0%A2%D1%80%D1%83%D0%B4"
+	QUOTE      = `\[[0-9]+\]:*\d*`
 )
+
 var (
 	bot      *tgbotapi.BotAPI
 	botToken string
 	baseURL  string
+	reg      *regexp.Regexp
 	)
 
 func initTelegram() {
@@ -109,20 +112,18 @@ func getQuote() (string, error) {
 		return "", err
 	}
 
-	sel := doc.Find("html").Find("body").Find("div").Find("div").Find("div").Find("div").Find("div").Find(`table`)
-	fmt.Println(sel)
-	n := rand.Intn(sel.Length())
-	// Find the review items
-
 	var bandRes string
+	count := 0
+	sel := doc.Find("html").Find("body").Find("div").Find("div").Find("div").Find("div").Find("div")
+	rand.Seed(time.Now().UnixNano())
+	n := rand.Intn(sel.Length())
 	sel.Each(func(i int, s *goquery.Selection) {
-		if s.Index() == n {
-			// For each item found, get the band and title
-			band := s.Find("tbody").Find("tr").Find("td").Has("div").Text()
-			//title := s.Find("i").Text()
-			fmt.Printf("Review %d: %s - %s\n", i, band)
-			bandRes = band
+		if count == n && s.Index() == 0 && !strings.Contains(s.Text(), "↑") {
+			//fmt.Println(s.Text()))
+			res := reg.ReplaceAllString(strings.TrimSpace(s.Text()), "${1}")
+			bandRes = res
 		}
+		count++
 	})
 
 	return bandRes, nil
@@ -130,31 +131,34 @@ func getQuote() (string, error) {
 
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatal("$PORT must be set")
-	}
+	reg = regexp.MustCompile(QUOTE)
+	//port := os.Getenv("PORT")
+	//if port == "" {
+	//	log.Fatal("$PORT must be set")
+	//}
+	//
+	//botToken = os.Getenv("TELEGRAM_TOKEN")
+	//if botToken == "" {
+	//	log.Fatal("$TELEGRAM_TOKEN must be set")
+	//}
+	//
+	//baseURL = os.Getenv("WEBHOOK_URL")
+	//if baseURL == "" {
+	//	log.Fatal("$WEBHOOK_URL must be set")
+	//}
+	//
+	//// gin router
+	//router := gin.New()
+	//router.Use(gin.Logger())
+	//
+	//// telegram
+	//initTelegram()
+	//router.POST("/" + bot.Token, webhookHandler)
+	//
+	//err := router.Run(":" + port)
+	//if err != nil {
+	//	log.Println(err)
+	//}
 
-	botToken = os.Getenv("TELEGRAM_TOKEN")
-	if botToken == "" {
-		log.Fatal("$TELEGRAM_TOKEN must be set")
-	}
-
-	baseURL = os.Getenv("WEBHOOK_URL")
-	if baseURL == "" {
-		log.Fatal("$WEBHOOK_URL must be set")
-	}
-
-	// gin router
-	router := gin.New()
-	router.Use(gin.Logger())
-
-	// telegram
-	initTelegram()
-	router.POST("/" + bot.Token, webhookHandler)
-
-	err := router.Run(":" + port)
-	if err != nil {
-		log.Println(err)
-	}
+	fmt.Println(getQuote())
 }
