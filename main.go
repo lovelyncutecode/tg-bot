@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/Syfaro/telegram-bot-api"
 	"github.com/gin-gonic/gin"
@@ -12,6 +11,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -132,33 +132,31 @@ func getQuote() (string, error) {
 
 func main() {
 	reg = regexp.MustCompile(QUOTE)
-	//port := os.Getenv("PORT")
-	//if port == "" {
-	//	log.Fatal("$PORT must be set")
-	//}
-	//
-	//botToken = os.Getenv("TELEGRAM_TOKEN")
-	//if botToken == "" {
-	//	log.Fatal("$TELEGRAM_TOKEN must be set")
-	//}
-	//
-	//baseURL = os.Getenv("WEBHOOK_URL")
-	//if baseURL == "" {
-	//	log.Fatal("$WEBHOOK_URL must be set")
-	//}
-	//
-	//// gin router
-	//router := gin.New()
-	//router.Use(gin.Logger())
-	//
-	//// telegram
-	//initTelegram()
-	//router.POST("/" + bot.Token, webhookHandler)
-	//
-	//err := router.Run(":" + port)
-	//if err != nil {
-	//	log.Println(err)
-	//}
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 
-	fmt.Println(getQuote())
+	botToken = os.Getenv("TELEGRAM_TOKEN")
+	if botToken == "" {
+		log.Fatal("$TELEGRAM_TOKEN must be set")
+	}
+
+	baseURL = os.Getenv("WEBHOOK_URL")
+	if baseURL == "" {
+		log.Fatal("$WEBHOOK_URL must be set")
+	}
+
+	// gin router
+	router := gin.New()
+	router.Use(gin.Logger())
+
+	// telegram
+	initTelegram()
+	router.POST("/" + bot.Token, webhookHandler)
+
+	err := router.Run(":" + port)
+	if err != nil {
+		log.Println(err)
+	}
 }
