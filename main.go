@@ -109,7 +109,7 @@ func getQuote() (string, error) {
 		return "", err
 	}
 
-	sel := doc.Find(`<table cellspacing="0" style="background-color:transparent;text-align:left;">`)
+	sel := doc.Find(`table`).Has("cellspacing")
 	n := rand.Intn(sel.Length())
 	// Find the review items
 
