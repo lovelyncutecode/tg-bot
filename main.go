@@ -74,8 +74,11 @@ func webhookHandler(c *gin.Context) {
 			log.Println(err)
 			return
 		}
-	log.Println(baseURL + botToken + "/sendMessage")
-		resp, err := http.DefaultClient.Post(baseURL + botToken + "/sendMessage", "application/json", bytes.NewReader(bts))
+
+		tgbotapi.Message{}.Command()
+	log.Println("https://api.telegram.org/"+ botToken + "/sendMessage")
+
+		resp, err := http.DefaultClient.Post("https://api.telegram.org/"+ botToken + "/sendMessage", "application/json", bytes.NewReader(bts))
 		if resp.Status != "200" {
 			log.Println(resp.Status)
 			return
