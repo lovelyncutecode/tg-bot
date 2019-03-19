@@ -1,4 +1,4 @@
-package awesomeProject
+package main
 
 import (
 	"encoding/json"
