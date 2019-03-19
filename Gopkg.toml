@@ -27,7 +27,6 @@
 [metadata.heroku]
   root-package = "github.com/lovelyncutecode/tg-bot"
   go-version = "go1.10.3"
-  install = ["./..."]
 
 [[constraint]]
   name = "github.com/Syfaro/telegram-bot-api"
