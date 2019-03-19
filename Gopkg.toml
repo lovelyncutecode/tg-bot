@@ -25,7 +25,7 @@
 #   unused-packages = true
 
 [metadata.heroku]
-  root-package = "github.com/lovelyncutecode/tg-bot"
+  root-package = "tg-bot"
   go-version = "go1.10.3"
 
 [[constraint]]
