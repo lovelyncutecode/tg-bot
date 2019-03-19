@@ -74,8 +74,8 @@ func webhookHandler(c *gin.Context) {
 			log.Println(err)
 			return
 		}
-	log.Println(baseURL + "/" + botToken + "/sendMessage")
-		resp, err := http.DefaultClient.Post(baseURL + "/" + botToken + "/sendMessage", "application/json", bytes.NewReader(bts))
+	log.Println(baseURL + botToken + "/sendMessage")
+		resp, err := http.DefaultClient.Post(baseURL + botToken + "/sendMessage", "application/json", bytes.NewReader(bts))
 		if resp.Status != "200" {
 			log.Println(resp.Status)
 			return
